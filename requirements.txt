@@ -1,0 +1,7 @@
+django==1.11.3
+virtualenv==15.1.0
+pymysql==0.7.9
+scrapy==1.4.0
+scikit-learn==0.18.2
+beautifulsoup4==4.6.0
+mecab-python3==0.7
