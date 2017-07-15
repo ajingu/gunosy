@@ -1,0 +1,11 @@
+{% extends 'clf/base.html' %}
+
+{% block content %}
+    <div class="form">
+        <h1>Submit Article URL</h1>
+        <form method="POST", class="post-form">{% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="save btn btn-default">Analyze</button>
+        </form>
+    </div>
+{% endblock content %}

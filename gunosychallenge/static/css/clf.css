@@ -1,0 +1,28 @@
+
+.page-header {
+    background-color: #149BF5;
+    margin-top: 0;
+    padding: 20px 20px 20px 40px;
+}
+
+.page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+
+.form, .analysis {
+    padding: 290px;
+    text-align: center;
+}
+
+h1 {
+    font-family: "Slabo 27px";
+}
+
+h2 {
+    font-family: sans-serif;
+    font-size: 20px;
+}
+
+

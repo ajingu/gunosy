@@ -1,0 +1,18 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <title>Article Classifier</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'css/clf.css' %}">
+        <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
+    </head>
+    <body>
+        <div class="page-header">
+            <h1><a href="/">Article Classifier</a></h1>
+        </div>
+        <div class="content">
+        {% block content %}
+        {% endblock %}
+        </div>
+    </body>
+</html>
