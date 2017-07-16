@@ -14,7 +14,8 @@ before_install:
   - brew install python3
   - virtualenv env -p python3
   - source env/bin/activate
-  - sudo apt-get install libmecab-dev
+  - brew install mecab
+  - brew install mecab-ipadic
 
 install:
   - pip install -r requirements.txt
