@@ -20,6 +20,7 @@ before_install:
   - brew install mecab
   - brew install mecab-ipadic
   - brew install mysql
+  - mysql.server start
   - mysql -e 'CREATE DATABASE myapp_test;'
 
 install:
