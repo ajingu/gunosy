@@ -3,6 +3,9 @@ language: python
 python:
   - '3.6'
 
+services:
+  - mysql
+
 matrix:
   include:
     - os: osx
@@ -16,6 +19,7 @@ before_install:
   - source env/bin/activate
   - brew install mecab
   - brew install mecab-ipadic
+  - mysql -e 'CREATE DATABASE myapp_test;'
 
 install:
   - pip install -r requirements.txt
