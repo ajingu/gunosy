@@ -3,7 +3,7 @@ language: python
 python:
   - '3.6'
 
-matrix
+matrix:
   include:
     - os: osx
       sudo: required
