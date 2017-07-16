@@ -19,6 +19,7 @@ before_install:
   - source env/bin/activate
   - brew install mecab
   - brew install mecab-ipadic
+  - brew install mysql
   - mysql -e 'CREATE DATABASE myapp_test;'
 
 install:
