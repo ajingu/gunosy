@@ -22,16 +22,9 @@ before_install:
   - source env/bin/activate
   - brew install mecab
   - brew install mecab-ipadic
-  - brew install mysql
 
 install:
   - pip install -r requirements.txt
-
-before_script:
-  - mysql.server start
-  - mysql --no-defaults -u travis --host=127.0.0.1
-  - mysql -e "CREATE USER 'travis'@'localhost' IDENTIFIED WITH mysql_native_password;"
-  - mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'travis'@'localhost' WITH GRANT OPTION;"
 
 script:
   - cd gunosychallenge
