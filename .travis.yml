@@ -22,9 +22,13 @@ before_install:
   - source env/bin/activate
   - brew install mecab
   - brew install mecab-ipadic
+  - brew install mysql
 
 install:
   - pip install -r requirements.txt
+
+before_script:
+  - mysql.server start
 
 script:
   - cd gunosychallenge
