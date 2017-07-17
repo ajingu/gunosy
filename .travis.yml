@@ -12,6 +12,9 @@ matrix:
       language: generic
       sudo: required
 
+env:
+  - DJANGO=1.11 DB=mysql
+
 before_install:
   - brew update       
   - brew install python3
@@ -21,11 +24,12 @@ before_install:
   - brew install mecab-ipadic
   - brew install mysql
   - mysql.server start
-  - mysql -h 127.0.0.1 -uroot -p
-  - mysql -e 'CREATE DATABASE myapp_test;'
 
 install:
   - pip install -r requirements.txt
+
+before_script:
+  - mysql -e 'CREATE DATABASE test;' -u root
 
 script:
   - cd gunosychallenge
