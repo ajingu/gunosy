@@ -81,7 +81,7 @@ DATABASES = {
     'NAME': 'GunosyChallenge',
     'USER': 'root',
     'PASSWORD': 'guujin0120',
-    'HOST': '',
+    'HOST': '127.0.0.1',
     'PORT': '',
     }
 }
