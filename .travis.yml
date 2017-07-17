@@ -28,8 +28,14 @@ install:
   - pip install -r requirements.txt
 
 before_script:
+  - mysqld_safe --skip-grant-tables &
+  - mysql -u root
+  - mysql -e "use mysql;"
+  - mysql -e "truncate table user;"
+  - mysql -e "grant all privileges on *.* to 'root'@'localhost' identified by 'guujin0120' with grant option;"
+  - mysql -e "quit;"
   - mysql.server start
-
+  
 script:
   - cd gunosychallenge
   - python manage.py test
