@@ -29,7 +29,7 @@ install:
   - pip install -r requirements.txt
 
 before_script:
-  - mysql -e 'CREATE DATABASE test;' --host=127.0.0.1
+  - mysql -u root --host=127.0.0.1
 
 script:
   - cd gunosychallenge
