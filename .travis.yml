@@ -29,7 +29,7 @@ install:
 
 before_script:
   - mysql.server start
-  - mysql -u root --host=127.0.0.1
+  - mysql --no-defaults -u root --host=127.0.0.1
 
 script:
   - cd gunosychallenge
