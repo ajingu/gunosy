@@ -1,8 +1,8 @@
 from django.test import TestCase
 
+
 class ArticleClassifierTests(TestCase):
-    """Test class for app"""
-    
+    """Test class for app""" 
     def setUp(self):
         """Setup test"""
         self.categories = {'エンタメ',
