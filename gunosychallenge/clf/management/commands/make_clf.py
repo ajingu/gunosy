@@ -18,7 +18,9 @@ class Command(BaseCommand):
 
             data = Article.objects.values()
             corpus = Corpus().corpus(data, "NaiveBayes")
-            data_train, data_test = train_test_split(corpus, test_size=0.2, random_state=42)
+            data_train, data_test = train_test_split(corpus,
+                                                     test_size=0.2,
+                                                     random_state=42)
             nb = NaiveBayesClassifier()
             nb.train(data_train)
             nb.save()

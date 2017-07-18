@@ -31,7 +31,9 @@ class NaiveBayesClassifier:
 
         # Laplace Smoothing
         for cat in self.categories:
-            self.denominator[cat] = sum(self.wordcount[cat].values()) + len(self.vocabularies)
+            wordcount_in_cat = sum(self.wordcount[cat].values())
+            wordcount_all = len(self.vocabularies)
+            self.denominator[cat] = wordcount_in_cat + wordcount_all
 
     def classify(self, vocab):
         best = None

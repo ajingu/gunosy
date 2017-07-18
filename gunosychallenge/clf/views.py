@@ -12,7 +12,9 @@ def form(request):
         form = ArticleForm(request.POST)
         if form.is_valid():
             try:
-                text = get_text(request.POST.get("url", "It's error. Please submit the form with 'url'."))
+                url = request.POST.get("url",
+                                       "Please submit 'url'.")
+                text = get_text(url)
                 vocab = Corpus().get_main_words(text)
 
                 with open("m_clf.pickle", "rb") as f:
@@ -25,7 +27,7 @@ def form(request):
             except Exception as e:
                     return render(request,
                                   'clf/analysis.html',
-                                  {'result': "It's error. Please submit a gunosy article"})
+                                  {'result': "Please submit a gunosy article"})
 
     else:
         form = ArticleForm()

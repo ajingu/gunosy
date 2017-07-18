@@ -85,7 +85,7 @@ if os.getenv('TRAVIS', None):
             'HOST': '127.0.0.1',
             'PORT': '',
         }
-    }  
+    }
 else:
     DATABASES = {
         'default': {
