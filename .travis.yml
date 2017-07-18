@@ -30,8 +30,6 @@ install:
 before_script:
   - mysql.server start
   - mysql -e "create database travis_ci_db;" -u root --host=127.0.0.1
-  - mysql -e "insert into mysql.user (Host, User) values ('localhost', 'travis');"
-  - mysql -e "grant all on *.* to 'travis'@'localhost' with grant option;"
 
 script:
   - cd gunosychallenge
