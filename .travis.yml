@@ -29,7 +29,7 @@ install:
 
 before_script:
   - mysqld_safe --skip-grant-tables &
-  - mysql -u root --host==127.0.0.1
+  - mysql -u root --host=127.0.0.1
   - mysql -e "use mysql;"
   - mysql -e "truncate table user;"
   - mysql -e "grant all privileges on *.* to 'root'@'localhost' identified by 'guujin0120' with grant option;"
