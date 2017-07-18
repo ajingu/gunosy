@@ -30,8 +30,10 @@ install:
 before_script:
   - mysql.server start
   - mysql -u root
-  - mysql -e "insert into mysql.user (Host, User, Password) values ('localhost', 'root', PASSWORD('guujin0120'));"
-  - mysql -e "grant all privileges on *.* to 'root'@'localhost' with grant option;"
+  - mysql -e "select * from mysql.user;"
+  - mysql -e "insert into mysql.user (Host, User, Password) values ('127.0.0.1', 'root', PASSWORD('guujin0120'));"
+  - mysql -e "select * from mysql.user;"
+  - mysql -e "grant all privileges on *.* to 'root'@'127.0.0.1' with grant option;"
   - mysql -e "flush privileges"
 
 script:
