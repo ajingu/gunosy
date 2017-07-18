@@ -81,7 +81,7 @@ if os.getenv('TRAVIS', None):
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'travis_ci_db',
             'USER': 'travis',
-            'PASSWORD': '',
+            'PASSWORD': 'travis',
             'HOST': '127.0.0.1',
             'PORT': '',
         }

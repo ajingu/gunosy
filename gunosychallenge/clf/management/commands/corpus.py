@@ -1,20 +1,27 @@
 # -*- coding: utf-8 -*-
 import MeCab
+from enum import Enum, auto
+
+
+class MethodEnum(Enum):
+    NaiveBayes = auto()
+    FastText = auto()
+        
 
 class Corpus:
     def __init__(self):
-        pass
+        self.pos = {"名詞", "形容詞"}
     
     def corpus(self, records, mode):
         corpus = []
-        if mode == "NaiveBayes":
+        if mode == MethodEnum.NaiveBayes:
             for record in records:
                 data = {}
                 data["category"] = record["category"]
                 data["vocab"] = self.get_main_words(record["text"])
                 corpus.append(data)
                 
-        elif mode == "fasttext":
+        elif mode == MethodEnum.FastText:
             for record in records:
                 data = {}
                 data["category"] = record["category"]
@@ -34,7 +41,7 @@ class Corpus:
     
         while node:
             word_type = node.feature.split(",")[0]
-            if word_type in ["名詞", "形容詞"]:
+            if word_type in self.pos:
                 out_words.append(node.surface)
             node = node.next    
         
