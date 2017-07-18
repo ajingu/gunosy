@@ -1,0 +1,40 @@
+language: python
+
+python:
+  - '3.6'
+
+services:
+  - mysql
+
+matrix:
+  include:
+    - os: osx
+      language: generic
+      sudo: required
+
+env:
+  - DJANGO=1.11 DB=mysql
+
+before_install:
+  - brew update       
+  - brew install python3
+  - virtualenv env -p python3
+  - source env/bin/activate
+  - brew install mysql
+  - brew install mecab
+  - brew install mecab-ipadic
+  - git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git
+  - ./mecab-ipadic-neologd/bin/install-mecab-ipadic-neologd -y -n
+
+install:
+  - pip install -r requirements.txt
+
+before_script:
+  - mysql.server start
+  - mysql -e "create database travis_ci_db;" -u root --host=127.0.0.1
+  - mysql -e "CREATE USER 'travis'@'localhost' IDENTIFIED BY 'travis';" -u root
+  - mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'travis'@'localhost' WITH GRANT OPTION;" -u root
+
+script:
+  - cd gunosychallenge
+  - python manage.py test
