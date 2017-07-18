@@ -13,6 +13,3 @@ def get_text(url):
     text = "".join([tag.text for tag in tags if tag.name == "p"])
 
     return text
-
-
-
