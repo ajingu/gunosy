@@ -29,9 +29,8 @@ install:
 
 before_script:
   - mysql.server start
-  - mysql -u travis --host=127.0.0.1
+  - mysql -e "create database travis_ci_db;" -u root --host=127.0.0.1
   - mysql -e "grant all privileges on *.* to 'travis'@'localhost' with grant option;"
-  - mysql -e "flush privileges"
 
 script:
   - cd gunosychallenge

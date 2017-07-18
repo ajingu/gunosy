@@ -75,16 +75,28 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-    'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'GunosyChallenge',
-    'USER': 'root',
-    'PASSWORD': 'guujin0120',
-    'HOST': '127.0.0.1',
-    'PORT': '',
+if os.getenv('TRAVIS', None):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'travis_ci_db',
+            'USER': 'travis',
+            'PASSWORD': '',
+            'HOST': '127.0.0.1',
+            'PORT': '',
+        }
+    }  
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'GunosyChallenge',
+            'USER': 'root',
+            'PASSWORD': 'guujin0120',
+            'HOST': '127.0.0.1',
+            'PORT': '',
+        }
     }
-}
 
 
 # Password validation
