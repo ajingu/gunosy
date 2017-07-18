@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import MeCab
+import subprocess
 from enum import Enum, auto
 
 
@@ -11,6 +12,15 @@ class MethodEnum(Enum):
 class Corpus:
     def __init__(self):
         self.pos = {"名詞", "形容詞"}
+        process = subprocess.run(["mecab-config --dicdir","'/mecab-ipadic-neologd'"],
+                                stdout=subprocess.PIPE,
+                                shell=True)
+        
+        dic_path = process.stdout.decode("utf-8").strip() + "/mecab-ipadic-neologd"
+        
+        self.tagger_path = "-d " + dic_path
+        self.wakati_tagger_path = "-Owakati -d " + dic_path
+
     
     def corpus(self, records, mode):
         corpus = []
@@ -35,7 +45,7 @@ class Corpus:
         
     def get_main_words(self, text):
         out_words = []
-        tagger = MeCab.Tagger("-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
+        tagger = MeCab.Tagger(self.tagger_path)
         tagger.parse("")
         node = tagger.parseToNode(text)
     
@@ -48,6 +58,6 @@ class Corpus:
         return out_words
     
     def split_words(self, text):
-        tagger = MeCab.Tagger("-Owakati -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
+        tagger = MeCab.Tagger(self.wakati_tagger_path)
         splitted_sent = tagger.parse(text)
         return splitted_sent

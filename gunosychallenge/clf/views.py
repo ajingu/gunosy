@@ -21,7 +21,7 @@ def form(request):
                                   'clf/analysis.html',
                                   {'result': cat})
                 
-            except:
+            except Exception as e:
                     return render(request,
                                   'clf/analysis.html',
                                   {'result': "It's error. Please submit a gunosy article"})

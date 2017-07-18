@@ -20,9 +20,11 @@ before_install:
   - brew install python3
   - virtualenv env -p python3
   - source env/bin/activate
-  - brew install mecab
-  - brew install mecab-ipadic
+  - brew install mecab mecab-ipadic git curl xz
   - brew install mysql
+  - git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git
+  - cd mecab-ipadic-neologd
+  - ./bin/install-mecab-ipadic-neologd -n
 
 install:
   - pip install -r requirements.txt
