@@ -19,6 +19,9 @@ class Connect:
         if data:
             print("Successfully Downloaded")
 
+        else:
+            print("Data is nothing")
+
         return data
 
     def delete_data(self):
