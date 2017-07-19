@@ -6,18 +6,22 @@ from gunosynews.items import GunosynewsItem
 class GunosySpider(scrapy.Spider):
     name = 'gunosy'
     allowed_domains = ['gunosy.com']
-    start_urls = ["http://gunosy.com/categories/" + str(page) for page in range(1, 9)]
+    start_urls = [
+            "http://gunosy.com/categories/" + str(page)
+            for page in range(9, 42)
+            ]
 
     def parse(self, response):
         category = response.xpath("//li[contains(@class, 'current')]/a/text()").extract_first()
 
-        for cell in response.xpath("//div[@class='list_content']//div[@class='list_title']/a"):
+        blocks = response.xpath("//div[@class='list_content']//div[@class='list_title']/a")
+        for block in blocks:
             article = GunosynewsItem()
-            article["title"] = cell.xpath("text()").extract_first()
+            article["title"] = block.xpath("text()").extract_first()
 
             article["category"] = category
 
-            detail_link = cell.xpath("@href").extract_first()
+            detail_link = block.xpath("@href").extract_first()
             request = scrapy.Request(detail_link, callback=self.parse_detail)
 
             request.meta["article"] = article

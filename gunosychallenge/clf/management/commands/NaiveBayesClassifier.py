@@ -53,11 +53,17 @@ class NaiveBayesClassifier:
         return score
 
     def _wordProb(self, word, cat):
-        return float(self.wordcount[cat][word] + 1) / float(self.denominator[cat])
+        numerator = float(self.wordcount[cat][word] + 1)
+        denominator = self.denominator[cat]
+        return numerator / denominator
 
     def score(self, data):
-        correct = sum([self.classify(d["vocab"]) == d["category"] for d in data])
-        return float(correct) / len(data)
+        bool_matched = [
+                self.classify(d["vocab"]) == d["category"]
+                for d in data
+                ]
+        num_matched = sum(bool_matched)
+        return float(num_matched) / len(data)
 
     def save(self):
         with open("m_clf.pickle", "wb") as f:

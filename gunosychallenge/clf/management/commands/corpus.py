@@ -1,36 +1,37 @@
 # -*- coding: utf-8 -*-
 import MeCab
 import subprocess
-from enum import Enum, auto
+from enum import Enum
 
 
 class MethodEnum(Enum):
-    NaiveBayes = auto()
-    FastText = auto()
+    NaiveBayes = "NaiveBayes"
+    FastText = "FastText"
 
 
 class Corpus:
     def __init__(self):
         self.pos = {"名詞", "形容詞"}
-        process = subprocess.run(["mecab-config --dicdir", "'/mecab-ipadic-neologd'"],
-                                 stdout=subprocess.PIPE,
-                                 shell=True)
+        cmd = ["mecab-config --dicdir", "'/mecab-ipadic-neologd'"]
+        dir_path = subprocess.run(cmd,
+                                  stdout=subprocess.PIPE,
+                                  shell=True).stdout.decode("utf-8").strip()
 
-        dic_path = process.stdout.decode("utf-8").strip() + "/mecab-ipadic-neologd"
+        dic_path = dir_path + "/mecab-ipadic-neologd"
 
         self.tagger_path = "-d " + dic_path
         self.wakati_tagger_path = "-Owakati -d " + dic_path
 
     def corpus(self, records, mode):
         corpus = []
-        if mode == MethodEnum.NaiveBayes:
+        if mode == MethodEnum.NaiveBayes.value:
             for record in records:
                 data = {}
                 data["category"] = record["category"]
                 data["vocab"] = self.get_main_words(record["text"])
                 corpus.append(data)
 
-        elif mode == MethodEnum.FastText:
+        elif mode == MethodEnum.FastText.value:
             for record in records:
                 data = {}
                 data["category"] = record["category"]

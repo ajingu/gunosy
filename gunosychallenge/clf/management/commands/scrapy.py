@@ -12,6 +12,6 @@ class Command(BaseCommand):
         self.execute(no_color=False)
 
     def handle(self, *args, **options):
-        os.chdir(os.path.abspath("../../../../gunosynews"))
+        os.chdir(os.path.abspath("../gunosynews"))
         from scrapy.cmdline import execute
         execute(self._argv[1:])
