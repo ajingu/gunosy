@@ -10,7 +10,7 @@ from nltk.tokenize import RegexpTokenizer
 class Corpus:
     def __init__(self):
         self.pos = {"名詞", "形容詞"}
-        self.stopwords =  self.get_stopwords()
+        self.stopwords = self.get_stopwords()
         cmd = ["mecab-config --dicdir", "'/mecab-ipadic-neologd'"]
         dir_path = subprocess.run(cmd,
                                   stdout=subprocess.PIPE,
@@ -53,15 +53,13 @@ class Corpus:
                 labels.append(record["category"])
             X = vectorizer.fit_transform(words)
             y = labels
-            
-            
+
             print(vectorizer.vocabulary_)
             with open("vocab.pickle", "wb") as f:
                 pickle.dump(vectorizer.vocabulary_, f)
-                
+
             with open("idfs.pickle", "wb") as f:
                 pickle.dump(vectorizer.idf_, f)
-
 
             return X, y
 
@@ -69,7 +67,9 @@ class Corpus:
             print("Error: You can select 'NaiveBayes' or 'svm'")
 
     def get_stopwords(self):
-        slothlib_path = "http://svn.sourceforge.jp/svnroot/slothlib/CSharp/Version1/SlothLib/NLP/Filter/StopWord/word/Japanese.txt"
+        slothlib_path = ("http://svn.sourceforge.jp/svnroot/slothlib/CSharp/"
+                         "Version1/SlothLib/NLP/Filter/StopWord/word/"
+                         "Japanese.txt")
         res = urlopen(slothlib_path)
         stopwords = {line.decode("utf-8").strip() for line in res} - {""}
         return stopwords
@@ -83,7 +83,7 @@ class Corpus:
         while node:
             word_type = node.feature.split(",")[0]
             word = node.surface
-            if word_type in self.pos and not word in self.stopwords:
+            if word_type in self.pos and word not in self.stopwords:
                 out_words.append(word)
             node = node.next
 
