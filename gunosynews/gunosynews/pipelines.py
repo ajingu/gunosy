@@ -21,9 +21,9 @@ class GunosynewsPipeline(object):
     def process_item(self, item, spider):
         try:
             self.cursor.execute(
-                    "INSERT INTO clf_article (text, category) VALUES (%s, %s)",
-                    (item["text"], item["category"])
-                    )
+                "INSERT INTO clf_article (text, category) VALUES (%s, %s)",
+                (item["text"], item["category"])
+            )
 
             self.conn.commit()
 

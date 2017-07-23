@@ -60,9 +60,9 @@ class NaiveBayesClassifier:
 
     def score(self, data):
         bool_matched = [
-                self.predict(d["vocab"]) == d["category"]
-                for d in data
-                ]
+            self.predict(d["vocab"]) == d["category"]
+            for d in data
+        ]
         num_matched = sum(bool_matched)
         score = float(num_matched) / len(data)
         return score

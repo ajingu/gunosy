@@ -28,8 +28,10 @@ before_install:
 
 install:
   - pip install -r requirements.txt
+  - pip install pep8 --use-mirrors
 
 before_script:
+  - pep8 --exclude=migrations,settings.py gunosynews gunosychallenge
   - mysql.server start
   - mysql -e "create database travis_ci_db;" -u root --host=127.0.0.1
   - mysql -e "CREATE USER 'travis'@'localhost' IDENTIFIED BY 'travis';" -u root

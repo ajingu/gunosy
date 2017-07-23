@@ -55,7 +55,7 @@ class Command(BaseCommand):
                                                                 test_size=0.2,
                                                                 stratify=y_res,
                                                                 random_state=4)
-            
+
             from .LogisticRegression import Logistic
 
             logistic = Logistic()

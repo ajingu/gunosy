@@ -7,15 +7,17 @@ class GunosySpider(scrapy.Spider):
     name = 'gunosy'
     allowed_domains = ['gunosy.com']
     start_urls = [
-            "http://gunosy.com/categories/" + str(page)
-            for page in range(9, 42)
-            ]
+        "http://gunosy.com/categories/" + str(page)
+        for page in range(9, 42)
+    ]
 
     def parse(self, response):
-        category = response.xpath("//li[contains(@class, 'current')]/a/text()").extract_first()
+        category = response.xpath(
+            "//li[contains(@class, 'current')]/a/text()").extract_first()
 
-        blocks = response.xpath("//div[@class='list_content']//div[@class='list_title']/a")
-        
+        blocks = response.xpath(
+            "//div[@class='list_content']//div[@class='list_title']/a")
+
         if blocks:
             for block in blocks:
                 article = GunosynewsItem()
@@ -23,7 +25,8 @@ class GunosySpider(scrapy.Spider):
                 article["category"] = category
 
                 detail_link = block.xpath("@href").extract_first()
-                request = scrapy.Request(detail_link, callback=self.parse_detail)
+                request = scrapy.Request(
+                    detail_link, callback=self.parse_detail)
 
                 request.meta["article"] = article
 
@@ -35,7 +38,8 @@ class GunosySpider(scrapy.Spider):
             yield scrapy.Request(url, callback=self.parse)
 
     def parse_detail(self, response):
-        text = response.xpath("string(//div[@class='article gtm-click']/.)").extract_first()
+        text = response.xpath(
+            "string(//div[@class='article gtm-click']/.)").extract_first()
 
         article = response.meta["article"]
         article["text"] = text

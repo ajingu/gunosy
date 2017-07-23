@@ -16,7 +16,6 @@ def form(request):
                 text = get_text(url)
                 words = Corpus().get_main_words(text)
 
-
                 with open("m_clf.pickle", "rb") as f:
                     clf = pickle.load(f)
 
