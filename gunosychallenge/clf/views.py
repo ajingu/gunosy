@@ -12,22 +12,24 @@ def form(request):
         form = ArticleForm(request.POST)
         if form.is_valid():
             try:
-                url = request.POST.get("url",
-                                       "Please submit 'url'.")
+                url = request.POST.get("url")
                 text = get_text(url)
-                vocab = Corpus().get_main_words(text)
+                words = Corpus().get_main_words(text)
+
 
                 with open("m_clf.pickle", "rb") as f:
-                    nb = pickle.load(f)
-                    cat = nb.classify(vocab)
-                    return render(request,
-                                  'clf/analysis.html',
-                                  {'result': cat})
+                    clf = pickle.load(f)
+
+                cat = clf.predict(words)
+                return render(request,
+                              'clf/analysis.html',
+                              {'result': cat})
 
             except Exception as e:
-                    return render(request,
-                                  'clf/analysis.html',
-                                  {'result': "Please submit a gunosy article"})
+                print(e)
+                return render(request,
+                              'clf/analysis.html',
+                              {'result': "Please submit a gunosy article"})
 
     else:
         form = ArticleForm()

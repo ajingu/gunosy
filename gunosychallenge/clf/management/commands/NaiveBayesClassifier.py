@@ -35,7 +35,7 @@ class NaiveBayesClassifier:
             wordcount_all = len(self.vocabularies)
             self.denominator[cat] = wordcount_in_cat + wordcount_all
 
-    def classify(self, vocab):
+    def predict(self, vocab):
         best = None
         max_prob = -sys.maxsize
         for cat in self.catcount.keys():
@@ -55,19 +55,18 @@ class NaiveBayesClassifier:
     def _wordProb(self, word, cat):
         numerator = float(self.wordcount[cat][word] + 1)
         denominator = self.denominator[cat]
-        return numerator / denominator
+        wordProb = numerator / denominator
+        return wordProb
 
     def score(self, data):
         bool_matched = [
-                self.classify(d["vocab"]) == d["category"]
+                self.predict(d["vocab"]) == d["category"]
                 for d in data
                 ]
         num_matched = sum(bool_matched)
-        return float(num_matched) / len(data)
+        score = float(num_matched) / len(data)
+        return score
 
     def save(self):
         with open("m_clf.pickle", "wb") as f:
             pickle.dump(self, f)
-
-    def validate(self):
-        pass
