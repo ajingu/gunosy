@@ -15,18 +15,19 @@ class GunosySpider(scrapy.Spider):
         category = response.xpath("//li[contains(@class, 'current')]/a/text()").extract_first()
 
         blocks = response.xpath("//div[@class='list_content']//div[@class='list_title']/a")
-        for block in blocks:
-            article = GunosynewsItem()
-            article["title"] = block.xpath("text()").extract_first()
+        
+        if blocks:
+            for block in blocks:
+                article = GunosynewsItem()
 
-            article["category"] = category
+                article["category"] = category
 
-            detail_link = block.xpath("@href").extract_first()
-            request = scrapy.Request(detail_link, callback=self.parse_detail)
+                detail_link = block.xpath("@href").extract_first()
+                request = scrapy.Request(detail_link, callback=self.parse_detail)
 
-            request.meta["article"] = article
+                request.meta["article"] = article
 
-            yield request
+                yield request
 
         next_page = response.xpath("//div[@class='pager-link-option']/a/@href")
         if next_page:
@@ -34,8 +35,7 @@ class GunosySpider(scrapy.Spider):
             yield scrapy.Request(url, callback=self.parse)
 
     def parse_detail(self, response):
-        paragraphs = response.xpath("//div[contains(@class, 'article_main')]/div[contains(@class, 'article')]/p/text()").extract()
-        text = "".join(paragraphs)
+        text = response.xpath("string(//div[@class='article gtm-click']/.)").extract_first()
 
         article = response.meta["article"]
         article["text"] = text

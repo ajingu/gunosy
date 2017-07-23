@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 import MeCab
+import pickle
 import subprocess
-from enum import Enum
-
-
-class MethodEnum(Enum):
-    NaiveBayes = "NaiveBayes"
-    FastText = "FastText"
+from urllib.request import urlopen
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from nltk.tokenize import RegexpTokenizer
 
 
 class Corpus:
     def __init__(self):
         self.pos = {"名詞", "形容詞"}
+        self.stopwords =  self.get_stopwords()
         cmd = ["mecab-config --dicdir", "'/mecab-ipadic-neologd'"]
         dir_path = subprocess.run(cmd,
                                   stdout=subprocess.PIPE,
@@ -23,25 +22,57 @@ class Corpus:
         self.wakati_tagger_path = "-Owakati -d " + dic_path
 
     def corpus(self, records, mode):
-        corpus = []
-        if mode == MethodEnum.NaiveBayes.value:
+
+        if mode == "NaiveBayes":
+            corpus = []
             for record in records:
                 data = {}
                 data["category"] = record["category"]
                 data["vocab"] = self.get_main_words(record["text"])
                 corpus.append(data)
 
-        elif mode == MethodEnum.FastText.value:
+            return corpus
+
+        elif mode == "svm":
+            words = []
+            labels = []
             for record in records:
-                data = {}
-                data["category"] = record["category"]
-                data["text"] = self.split_words(record["text"])
-                corpus.append(data)
+                words.append(self.get_main_words(record["text"]))
+                labels.append(record["category"])
+
+            return words, labels
+
+        elif mode == "logistic":
+            words = []
+            labels = []
+            tokenizer = RegexpTokenizer(r"\w+")
+            vectorizer = TfidfVectorizer(tokenizer=tokenizer.tokenize,
+                                         stop_words=self.stopwords)
+            for record in records:
+                words.append(" ".join(self.get_main_words(record["text"])))
+                labels.append(record["category"])
+            X = vectorizer.fit_transform(words)
+            y = labels
+            
+            
+            print(vectorizer.vocabulary_)
+            with open("vocab.pickle", "wb") as f:
+                pickle.dump(vectorizer.vocabulary_, f)
+                
+            with open("idfs.pickle", "wb") as f:
+                pickle.dump(vectorizer.idf_, f)
+
+
+            return X, y
 
         else:
-            return "Error: You can select 'NaiveBayes' or 'fasttext'"
+            print("Error: You can select 'NaiveBayes' or 'svm'")
 
-        return corpus
+    def get_stopwords(self):
+        slothlib_path = "http://svn.sourceforge.jp/svnroot/slothlib/CSharp/Version1/SlothLib/NLP/Filter/StopWord/word/Japanese.txt"
+        res = urlopen(slothlib_path)
+        stopwords = {line.decode("utf-8").strip() for line in res} - {""}
+        return stopwords
 
     def get_main_words(self, text):
         out_words = []
@@ -51,8 +82,9 @@ class Corpus:
 
         while node:
             word_type = node.feature.split(",")[0]
-            if word_type in self.pos:
-                out_words.append(node.surface)
+            word = node.surface
+            if word_type in self.pos and not word in self.stopwords:
+                out_words.append(word)
             node = node.next
 
         return out_words
