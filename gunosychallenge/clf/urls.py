@@ -1,6 +1,6 @@
 from django.conf.urls import url
-from . import views
+from .views import form
 
 urlpatterns = [
-    url(r'^$', views.form),
+    url(r'^$', form),
 ]

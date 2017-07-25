@@ -1,41 +1,59 @@
 # -*- coding: utf-8 -*-
 import math
 import sys
-import pickle
+import dill
 from collections import defaultdict
 
 
 class NaiveBayesClassifier:
+    """
+    Naive Bayes classifier for multinomial models.
+    """
+
     def __init__(self):
+        """Initialize the classifier."""
         self.categories = set()
         self.vocabularies = set()
-        self.wordcount = {}
-        self.catcount = {}
+        self.wordcount = defaultdict(lambda: defaultdict(int))
+        self.catcount = defaultdict(int)
         self.denominator = {}
 
-    def train(self, data):
-        for d in data:
-            cat = d["category"]
-            self.categories.add(cat)
+    def fit(self, X_train, y_train):
+        """Fit Logistic Regression classifier according to X, y.
 
-        for cat in self.categories:
-            self.wordcount[cat] = defaultdict(int)
-            self.catcount[cat] = 0
+        Parameters
+        ----------
+        X_train : array-like, shape [n_samples, n_features]
+            Training vectors, where n_samples is the number of samples
+            and n_features is the number of features.
 
-        for d in data:
-            cat, doc = d["category"], d["vocab"]
+        y_train : array-like, shape [n_samples]
+            Training Labels, where n_samples is the number of labels.
+
+        Returns
+        -------
+        self : object
+            Returns self.
+        """
+        self.categories = set(y_train)
+        self.n_samples = len(y_train)
+
+        for vocab, cat in zip(X_train, y_train):
             self.catcount[cat] += 1
-            for word in doc:
+            for word in vocab:
                 self.vocabularies.add(word)
                 self.wordcount[cat][word] += 1
 
         # Laplace Smoothing
+        wordcount_all = len(self.vocabularies)
         for cat in self.categories:
             wordcount_in_cat = sum(self.wordcount[cat].values())
-            wordcount_all = len(self.vocabularies)
             self.denominator[cat] = wordcount_in_cat + wordcount_all
 
+        return self
+
     def predict(self, vocab):
+        """Return a predicted category."""
         best = None
         max_prob = -sys.maxsize
         for cat in self.catcount.keys():
@@ -46,27 +64,45 @@ class NaiveBayesClassifier:
         return best
 
     def _catProb(self, vocab, cat):
-        total = sum(self.catcount.values())
-        score = math.log(float(self.catcount[cat]) / total)
+        """Return the logarithmic conditional probability, p(cat|vocab)."""
+        score = math.log(float(self.catcount[cat]) / self.n_samples)
         for word in vocab:
             score += math.log(self._wordProb(word, cat))
         return score
 
     def _wordProb(self, word, cat):
+        """Return the conditional probability, p(word|cat)."""
         numerator = float(self.wordcount[cat][word] + 1)
         denominator = self.denominator[cat]
         wordProb = numerator / denominator
         return wordProb
 
-    def score(self, data):
+    def score(self, X_test, y_test):
+        """Return the score of accuracy.
+
+        Parameters
+        ----------
+        X_test : array-like, shape [n_samples, n_features]
+            Test vectors, where n_samples is the number of samples
+            and n_features is the number of features.
+
+        y_test : array-like, shape [n_samples]
+            Test labels, where n_samples is the number of labels.
+
+        Returns
+        -------
+        score : float
+            Returns score of accuracy.
+        """
         bool_matched = [
-            self.predict(d["vocab"]) == d["category"]
-            for d in data
+            self.predict(vocab) == cat
+            for vocab, cat in zip(X_test, y_test)
         ]
         num_matched = sum(bool_matched)
-        score = float(num_matched) / len(data)
+        score = float(num_matched) / len(y_test)
         return score
 
     def save(self):
+        """Serialize this classifier by pickling."""
         with open("m_clf.pickle", "wb") as f:
-            pickle.dump(self, f)
+            dill.dump(self, f)

@@ -1,72 +1,82 @@
 # -*- coding: utf-8 -*-
 import MeCab
-import pickle
+import dill
 import subprocess
 from urllib.request import urlopen
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.tokenize import RegexpTokenizer
 
 
 class Corpus:
+    """Class that creates corpora."""
     def __init__(self):
+        """Setup pos, stopwords and the path for the tagger."""
         self.pos = {"名詞", "形容詞"}
-        self.stopwords = self.get_stopwords()
+        self.stopwords = self._get_stopwords()
         cmd = ["mecab-config --dicdir", "'/mecab-ipadic-neologd'"]
-        dir_path = subprocess.run(cmd,
-                                  stdout=subprocess.PIPE,
-                                  shell=True).stdout.decode("utf-8").strip()
+        process = subprocess.run(cmd,
+                                 stdout=subprocess.PIPE,
+                                 shell=True)
+
+        dir_path = process.stdout.decode("utf-8").strip()
 
         dic_path = dir_path + "/mecab-ipadic-neologd"
 
         self.tagger_path = "-d " + dic_path
-        self.wakati_tagger_path = "-Owakati -d " + dic_path
 
-    def corpus(self, records, mode):
+    def corpus(self, rows, mode):
+        """Return X, y.
 
+        Parameters
+        ----------
+        rows : list
+            A list of the article items.
+
+        mode : string
+            The classifier type, either 'NaiveBayes' or 'Logistic'.
+
+        Returns
+        -------
+        X : list
+            Returns a list of characteristic words of each text.
+
+        y : list
+            Returns a list of labels.
+        """
         if mode == "NaiveBayes":
-            corpus = []
-            for record in records:
-                data = {}
-                data["category"] = record["category"]
-                data["vocab"] = self.get_main_words(record["text"])
-                corpus.append(data)
+            X = []
+            y = []
+            for row in rows:
+                X.append(self.get_main_words(row["text"]))
+                y.append(row["category"])
 
-            return corpus
+            return X, y
 
-        elif mode == "svm":
-            words = []
-            labels = []
-            for record in records:
-                words.append(self.get_main_words(record["text"]))
-                labels.append(record["category"])
-
-            return words, labels
-
-        elif mode == "logistic":
+        elif mode == "Logistic":
             words = []
             labels = []
             tokenizer = RegexpTokenizer(r"\w+")
             vectorizer = TfidfVectorizer(tokenizer=tokenizer.tokenize,
-                                         stop_words=self.stopwords)
-            for record in records:
-                words.append(" ".join(self.get_main_words(record["text"])))
-                labels.append(record["category"])
+                                         stop_words=self.stopwords,
+                                         max_df=0.2,
+                                         min_df=2)
+            for row in rows:
+                words.append(" ".join(self.get_main_words(row["text"])))
+                labels.append(row["category"])
+
             X = vectorizer.fit_transform(words)
             y = labels
 
-            print(vectorizer.vocabulary_)
             with open("vocab.pickle", "wb") as f:
-                pickle.dump(vectorizer.vocabulary_, f)
+                dill.dump(vectorizer.vocabulary_, f)
 
             with open("idfs.pickle", "wb") as f:
-                pickle.dump(vectorizer.idf_, f)
+                dill.dump(vectorizer.idf_, f)
 
             return X, y
 
-        else:
-            print("Error: You can select 'NaiveBayes' or 'svm'")
-
-    def get_stopwords(self):
+    def _get_stopwords(self):
+        """Return a list of stopwords."""
         slothlib_path = ("http://svn.sourceforge.jp/svnroot/slothlib/CSharp/"
                          "Version1/SlothLib/NLP/Filter/StopWord/word/"
                          "Japanese.txt")
@@ -75,7 +85,19 @@ class Corpus:
         return stopwords
 
     def get_main_words(self, text):
-        out_words = []
+        """Return a list of characteristic words of the text.
+
+        Parameters
+        ----------
+        text : string
+            A text.
+
+        Returns
+        -------
+        main_words : list
+            Returns a list of characteristic words of each text.
+        """
+        main_words = []
         tagger = MeCab.Tagger(self.tagger_path)
         tagger.parse("")
         node = tagger.parseToNode(text)
@@ -84,12 +106,7 @@ class Corpus:
             word_type = node.feature.split(",")[0]
             word = node.surface
             if word_type in self.pos and word not in self.stopwords:
-                out_words.append(word)
+                main_words.append(word)
             node = node.next
 
-        return out_words
-
-    def split_words(self, text):
-        tagger = MeCab.Tagger(self.wakati_tagger_path)
-        splitted_sent = tagger.parse(text)
-        return splitted_sent
+        return main_words
