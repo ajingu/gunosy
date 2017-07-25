@@ -44,11 +44,13 @@ class Command(BaseCommand):
                                                                 test_size=0.2,
                                                                 stratify=y,
                                                                 random_state=4)
+            print(len(X_train))
+            print(len(X_test))
             nb = NaiveBayesClassifier()
             nb = nb.fit(X_train, y_train)
             nb.save()
 
-            print("accuracy: ", nb.score(X_test, y_test))
+            print(nb.score(X_test, y_test))
 
             self.stdout.write(self.style.SUCCESS("Succesfully made classfier"))
 
@@ -56,11 +58,11 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS("Logistic"))
 
             data = Article.objects.values()
-            X_res, y_res = Corpus().corpus(data, "Logistic")
-            X_train, X_test, y_train, y_test = train_test_split(X_res,
-                                                                y_res,
+            X, y = Corpus().corpus(data, "Logistic")
+            X_train, X_test, y_train, y_test = train_test_split(X,
+                                                                y,
                                                                 test_size=0.2,
-                                                                stratify=y_res,
+                                                                stratify=y,
                                                                 random_state=4)
 
             from .LogisticRegression import Logistic
@@ -69,7 +71,7 @@ class Command(BaseCommand):
             logistic = logistic.fit(X_train, y_train)
             logistic.save()
 
-            print(logistic.report(X_test, y_test))
+            print(logistic.score(X_test, y_test))
 
             self.stdout.write(self.style.SUCCESS("Succesfully made classfier"))
 

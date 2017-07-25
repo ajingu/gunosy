@@ -4,7 +4,7 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-
+import os
 import pymysql
 
 
@@ -12,10 +12,10 @@ class GunosynewsPipeline(object):
     """Pipeline that interacts with the database."""
     def __init__(self):
         """Set cursor and connection."""
-        self.conn = pymysql.connect("localhost",
-                                    "root",
-                                    "guujin0120",
-                                    "GunosyChallenge",
+        self.conn = pymysql.connect(os.environ["GUNOSY_DATABASE_NAME"],
+                                    os.environ["GUNOSY_USERNAME"],
+                                    os.environ["GUNOSY_PASSWORD"],
+                                    os.environ["GUNOSY_DATABASE_NAME"],
                                     charset="utf8")
 
         self.cursor = self.conn.cursor()

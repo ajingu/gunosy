@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import pymysql
 
 
@@ -6,10 +7,10 @@ class Connect:
     """Class that manages the interaction with the database."""
     def __init__(self):
         """Set cursor and connection."""
-        self.conn = pymysql.connect("localhost",
-                                    "root",
-                                    "guujin0120",
-                                    "GunosyChallenge",
+        self.conn = pymysql.connect(os.environ["GUNOSY_DATABASE_NAME"],
+                                    os.environ["GUNOSY_USERNAME"],
+                                    os.environ["GUNOSY_PASSWORD"],
+                                    os.environ["GUNOSY_DATABASE_NAME"],
                                     charset="utf8")
 
         self.cursor = self.conn.cursor(pymysql.cursors.DictCursor)

@@ -3,6 +3,7 @@ import math
 import sys
 import dill
 from collections import defaultdict
+from sklearn.metrics import classification_report
 
 
 class NaiveBayesClassifier:
@@ -101,6 +102,27 @@ class NaiveBayesClassifier:
         num_matched = sum(bool_matched)
         score = float(num_matched) / len(y_test)
         return score
+
+    def report(self, X_test, y_test):
+        """Return a text report showing the classification metrics.
+
+        Parameters
+        ----------
+        X_test : {array-like, sparse matrix}, shape [n_samples, n_features]
+            Test vectors, where n_samples is the number of samples
+            and n_features is the number of features.
+
+        y_test : array-like, shape [n_samples]
+            Test labels, where n_samples is the number of labels.
+
+        Returns
+        -------
+        report : string
+            Returns a classification report.
+        """
+        y_pred = [self.predict(vocab) for vocab in X_test]
+        report = classification_report(y_test, y_pred)
+        return report
 
     def save(self):
         """Serialize this classifier by pickling."""

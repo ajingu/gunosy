@@ -90,10 +90,10 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'GunosyChallenge',
-            'USER': 'root',
-            'PASSWORD': 'guujin0120',
-            'HOST': '127.0.0.1',
+            'NAME': os.environ["GUNOSY_DATABASE_NAME"],
+            'USER': os.environ["GUNOSY_USERNAME"],
+            'PASSWORD': os.environ["GUNOSY_PASSWORD"],
+            'HOST': os.environ["GUNOSY_HOST"],
             'PORT': '',
         }
     }
