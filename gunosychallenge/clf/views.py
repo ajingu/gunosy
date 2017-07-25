@@ -1,13 +1,23 @@
+import dill
 from django.shortcuts import render
 from .forms import ArticleForm
 from .httpRequest import get_text
 from .management.commands.corpus import Corpus
-import pickle
-
-clf = None
 
 
 def form(request):
+    """
+    Submit an article url and Return a predicted category or an error message.
+
+    **Context**
+
+    ``result``
+        A predicted category or an error message.
+
+    **Template**
+
+    :template:`clf/analysis.html`
+    """
     if request.method == 'POST':
         form = ArticleForm(request.POST)
         if form.is_valid():
@@ -17,12 +27,12 @@ def form(request):
                 words = Corpus().get_main_words(text)
 
                 with open("m_clf.pickle", "rb") as f:
-                    clf = pickle.load(f)
+                    clf = dill.load(f)
 
-                cat = clf.predict(words)
+                category = clf.predict(words)
                 return render(request,
                               'clf/analysis.html',
-                              {'result': cat})
+                              {'result': category})
 
             except Exception as e:
                 print(e)

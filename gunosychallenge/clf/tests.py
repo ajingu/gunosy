@@ -2,9 +2,9 @@ from django.test import TestCase
 
 
 class ArticleClassifierTests(TestCase):
-    """Test class for app"""
+    """Test for clf app."""
     def setUp(self):
-        """Setup test"""
+        """Setup test."""
         self.categories = {'エンタメ',
                            'スポーツ',
                            'おもしろ',
@@ -15,13 +15,13 @@ class ArticleClassifierTests(TestCase):
                            'グルメ'}
 
     def test_get(self):
-        """Accessing normally by 'get' method"""
+        """Access normally by 'get' method."""
 
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
 
     def test_submit_correctly(self):
-        """Correctly Submit form with url"""
+        """Submit a correct form with url."""
 
         data = {
             'url': 'https://gunosy.com/articles/RiyqL',
@@ -32,7 +32,7 @@ class ArticleClassifierTests(TestCase):
         self.assertIn(response.context['result'], self.categories)
 
     def test_submit_incorrectly(self):
-        """Incorrectly Submit form with url"""
+        """Submit an incorrect form with url."""
 
         data = {
             'url': 'https://gunosy.com/',

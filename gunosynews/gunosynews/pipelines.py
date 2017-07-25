@@ -9,7 +9,9 @@ import pymysql
 
 
 class GunosynewsPipeline(object):
+    """Pipeline that interacts with the database."""
     def __init__(self):
+        """Set cursor and connection."""
         self.conn = pymysql.connect("localhost",
                                     "root",
                                     "guujin0120",
@@ -19,6 +21,7 @@ class GunosynewsPipeline(object):
         self.cursor = self.conn.cursor()
 
     def process_item(self, item, spider):
+        """Upload the scraped item."""
         try:
             self.cursor.execute(
                 "INSERT INTO clf_article (text, category) VALUES (%s, %s)",
@@ -33,5 +36,6 @@ class GunosynewsPipeline(object):
         return item
 
     def close_spider(self, spider):
+        """Close cursor and connection."""
         self.cursor.close()
         self.conn.close()

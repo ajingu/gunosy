@@ -9,7 +9,6 @@ import scrapy
 
 
 class GunosynewsItem(scrapy.Item):
-    title = scrapy.Field()
-    url = scrapy.Field()
+    """Base class for all scraped items."""
     text = scrapy.Field()
     category = scrapy.Field()

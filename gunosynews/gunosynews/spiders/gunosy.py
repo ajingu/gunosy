@@ -4,43 +4,71 @@ from gunosynews.items import GunosynewsItem
 
 
 class GunosySpider(scrapy.Spider):
+    """Spider that crawl and scrape articles."""
     name = 'gunosy'
     allowed_domains = ['gunosy.com']
     start_urls = [
-        "http://gunosy.com/categories/" + str(page)
-        for page in range(9, 42)
+        'http://gunosy.com/tags/' + str(page)
+        for page in range(1, 2501)
     ]
 
+    categories = {'エンタメ',
+                  'スポーツ',
+                  'おもしろ',
+                  '国内',
+                  '海外',
+                  'コラム',
+                  'IT・科学',
+                  'グルメ'}
+
     def parse(self, response):
-        category = response.xpath(
-            "//li[contains(@class, 'current')]/a/text()").extract_first()
+        """Parse an article list page.
 
-        blocks = response.xpath(
-            "//div[@class='list_content']//div[@class='list_title']/a")
+        @url https://gunosy.com/tags/1
+        @returns requests 0
+        """
+        detail_links = response.xpath(
+            "//div[@class='list_content']//div[@class='list_title']//@href"
+        ).extract()
 
-        if blocks:
-            for block in blocks:
+        if detail_links:
+            for detail_link in detail_links:
+
                 article = GunosynewsItem()
 
-                article["category"] = category
-
-                detail_link = block.xpath("@href").extract_first()
                 request = scrapy.Request(
                     detail_link, callback=self.parse_detail)
 
-                request.meta["article"] = article
+                request.meta['article'] = article
 
                 yield request
 
-        next_page = response.xpath("//div[@class='pager-link-option']/a/@href")
-        if next_page:
-            url = response.urljoin(next_page[0].extract())
-            yield scrapy.Request(url, callback=self.parse)
+            next_page = response.xpath(
+                "//div[@class='pager-link-option']//@href"
+            )
+
+            if next_page:
+                url = response.urljoin(next_page.extract_first())
+                yield scrapy.Request(url, callback=self.parse)
 
     def parse_detail(self, response):
-        text = response.xpath(
-            "string(//div[@class='article gtm-click']/.)").extract_first()
+        """Parse an article page.
 
-        article = response.meta["article"]
-        article["text"] = text
-        yield article
+        @url https://gunosy.com/articles/RwrNu
+        @returns items 0 1
+        @scrapes category text
+        """
+        category = response.xpath(
+            "//li[contains(@class, 'current')]/a/text()"
+        ).extract_first()
+
+        if category in self.categories:
+            text = response.xpath(
+                "string(//div[@class='article gtm-click']/.)"
+            ).extract_first()
+
+            article = response.meta['article']
+            article['category'] = category
+            article['text'] = text
+
+            yield article
