@@ -65,14 +65,16 @@ class NaiveBayesClassifier:
         return best
 
     def _catProb(self, vocab, cat):
-        """Return the logarithmic conditional probability, p(cat|vocab)."""
+        """
+        Return the logarithmic conditional probability, log(P(cat|vocab)).
+        """
         score = math.log(float(self.catcount[cat]) / self.n_samples)
         for word in vocab:
             score += math.log(self._wordProb(word, cat))
         return score
 
     def _wordProb(self, word, cat):
-        """Return the conditional probability, p(word|cat)."""
+        """Return the conditional probability, P(word|cat)."""
         numerator = float(self.wordcount[cat][word] + 1)
         denominator = self.denominator[cat]
         wordProb = numerator / denominator

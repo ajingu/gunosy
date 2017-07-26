@@ -24,7 +24,7 @@ class GunosySpider(scrapy.Spider):
     def parse(self, response):
         """Parse an article list page.
 
-        @url https://gunosy.com/tags/1
+        @url https://gunosy.com/tags/2
         @returns requests 0
         """
         detail_links = response.xpath(

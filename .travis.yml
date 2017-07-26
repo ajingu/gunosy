@@ -38,5 +38,6 @@ before_script:
   - mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'travis'@'localhost' WITH GRANT OPTION;" -u root
 
 script:
+  - python gunosynews/scrapy_test.py
   - cd gunosychallenge
   - python manage.py test

@@ -44,8 +44,6 @@ class Command(BaseCommand):
                                                                 test_size=0.2,
                                                                 stratify=y,
                                                                 random_state=4)
-            print(len(X_train))
-            print(len(X_test))
             nb = NaiveBayesClassifier()
             nb = nb.fit(X_train, y_train)
             nb.save()
@@ -71,7 +69,7 @@ class Command(BaseCommand):
             logistic = logistic.fit(X_train, y_train)
             logistic.save()
 
-            print(logistic.score(X_test, y_test))
+            print(logistic.report(X_test, y_test))
 
             self.stdout.write(self.style.SUCCESS("Succesfully made classfier"))
 
