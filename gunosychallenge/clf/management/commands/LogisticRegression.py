@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import dill
 import scipy.sparse as sp
-from sklearn.model_selection import cross_val_score, KFold
+from sklearn.model_selection import cross_val_score, KFold, GridSearchCV
 from sklearn.linear_model import LogisticRegression
-from sklearn.multiclass import OneVsRestClassifier
 from sklearn.metrics import classification_report
 from sklearn.feature_extraction.text import TfidfVectorizer
 
@@ -15,22 +14,19 @@ class Logistic:
 
     def __init__(self):
         """Initialize the classifier and the vectorizer."""
-        self.clf = OneVsRestClassifier(LogisticRegression())
-        with open("vocab.pickle", "rb") as f:
-            self.vocabulary = dill.load(f)
-
-        with open("idfs.pickle", "rb") as f:
-            idfs = dill.load(f)
+        self.clf = LogisticRegression(class_weight="balanced")
 
         self.vectorizer = MyVectorizer()
-        self.vectorizer._tfidf._idf_diag = sp.spdiags(idfs,
+        m_idfs = self.vectorizer.idfs
+        self.vectorizer._tfidf._idf_diag = sp.spdiags(m_idfs,
                                                       diags=0,
-                                                      m=len(idfs),
-                                                      n=len(idfs))
-        self.vectorizer.vocabulary_ = self.vocabulary
+                                                      m=len(m_idfs),
+                                                      n=len(m_idfs))
 
     def fit(self, X_train, y_train):
         """Fit Logistic Regression classifier according to X, y.
+
+        Use GridSearchCV to search the optimized parameter values for 'C'.
 
         Parameters
         ----------
@@ -46,7 +42,14 @@ class Logistic:
         self : object
             Returns self.
         """
+        cs = [0.01, 0.1, 1, 10, 100]
+
+        parameters = {"C": cs}
+
+        self.clf = GridSearchCV(self.clf, parameters)
+
         self.clf.fit(X_train, y_train)
+        print(self.clf.best_estimator_)
 
         return self
 
@@ -131,4 +134,8 @@ class MyVectorizer(TfidfVectorizer):
     with open("idfs.pickle", "rb") as f:
         idfs = dill.load(f)
 
+    with open("vocab.pickle", "rb") as f:
+        vocabulary = dill.load(f)
+
     TfidfVectorizer.idf_ = idfs
+    TfidfVectorizer.vocabulary_ = vocabulary
