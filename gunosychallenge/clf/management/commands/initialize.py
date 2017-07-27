@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from .connect import Connect
+from .database import Database
 
 
 class Command(BaseCommand):
@@ -24,6 +24,6 @@ class Command(BaseCommand):
 
     def _initialize_database(self):
         """Delete all data."""
-        con = Connect()
-        con.delete_data()
-        con.close()
+        db = Database()
+        db.delete_data()
+        db.close()

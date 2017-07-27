@@ -7,10 +7,13 @@ from gunosynews.tests.fakeResponse import fake_response
 
 
 class MyTestCase(TestCase):
+    """Unittest for the scrapy bot 'gunosy'"""
     def setUp(self):
+        """Setup the spider."""
         self.spider = GunosySpider()
 
     def test_parse(self):
+        """Parse a fake content list page."""
         response = fake_response("test_content_list.html")
         requests = self.spider.parse(response)
 
@@ -33,15 +36,18 @@ class MyTestCase(TestCase):
         self.assertEqual(content_count, 21)
 
     def test_parse_detail(self):
-        response = fake_response("test_article.html")
+        """Parse a fake article page."""
+        response = fake_response("test_article.html",
+                                 "https://gunosy.com/articles/R5QcG")
         article = GunosynewsItem()
         response.meta["article"] = article
 
         item = self.spider.parse_detail(response).__next__()
 
-        self.assertIsNotNone(item["text"])
+        self.assertEqual(item["text"][:5], "剛力彩芽が")
+        self.assertEqual(item["text"][-5:], "浦山信一）")
         self.assertEqual(item["category"], "エンタメ")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
