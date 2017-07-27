@@ -22,7 +22,7 @@ class GunosySpider(scrapy.Spider):
                   'グルメ'}
 
     def parse(self, response):
-        """Parse an article list page.
+        """Parse a content list page.
 
         @url https://gunosy.com/tags/2
         @returns requests 0

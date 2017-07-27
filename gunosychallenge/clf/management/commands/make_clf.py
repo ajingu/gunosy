@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand
 from sklearn.model_selection import train_test_split
-from .corpus import Corpus
+from .preprocess import Preprocess
 from .NaiveBayesClassifier import NaiveBayesClassifier
+from .LogisticRegressionClassifier import LogisticRegressionClassifier
 from clf.models import Article
 
 
@@ -38,17 +39,17 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS("NaiveBayes"))
 
             data = Article.objects.values()
-            X, y = Corpus().corpus(data, "NaiveBayes")
+            X, y = Preprocess().preprocess(data, "NaiveBayes")
             X_train, X_test, y_train, y_test = train_test_split(X,
                                                                 y,
                                                                 test_size=0.2,
                                                                 stratify=y,
                                                                 random_state=4)
-            nb = NaiveBayesClassifier()
-            nb = nb.fit(X_train, y_train)
-            nb.save()
+            clf = NaiveBayesClassifier()
+            clf = clf.fit(X_train, y_train)
+            clf.save()
 
-            print(nb.score(X_test, y_test))
+            print(clf.report(X_test, y_test))
 
             self.stdout.write(self.style.SUCCESS("Succesfully made classfier"))
 
@@ -56,20 +57,17 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS("Logistic"))
 
             data = Article.objects.values()
-            X, y = Corpus().corpus(data, "Logistic")
+            X, y = Preprocess().preprocess(data, "Logistic")
             X_train, X_test, y_train, y_test = train_test_split(X,
                                                                 y,
                                                                 test_size=0.2,
                                                                 stratify=y,
                                                                 random_state=4)
+            clf = LogisticRegressionClassifier()
+            clf = clf.fit(X_train, y_train)
+            clf.save()
 
-            from .LogisticRegression import Logistic
-
-            logistic = Logistic()
-            logistic = logistic.fit(X_train, y_train)
-            logistic.save()
-
-            print(logistic.report(X_test, y_test))
+            print(clf.report(X_test, y_test))
 
             self.stdout.write(self.style.SUCCESS("Succesfully made classfier"))
 

@@ -2,7 +2,7 @@ import dill
 from django.shortcuts import render
 from .forms import ArticleForm
 from .httpRequest import get_text
-from .management.commands.corpus import Corpus
+from .management.commands.preprocess import Preprocess
 
 
 def form(request):
@@ -24,7 +24,7 @@ def form(request):
             try:
                 url = request.POST.get("url")
                 text = get_text(url)
-                words = Corpus().get_main_words(text)
+                words = Preprocess().get_main_words(text)
 
                 with open("m_clf.pickle", "rb") as f:
                     clf = dill.load(f)

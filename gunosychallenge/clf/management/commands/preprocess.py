@@ -7,8 +7,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.tokenize import RegexpTokenizer
 
 
-class Corpus:
-    """Class that creates corpora."""
+class Preprocess:
+    """Class that preprocesses data."""
     def __init__(self):
         """Setup pos, stopwords and the path for the tagger."""
         self.pos = {"名詞", "形容詞"}
@@ -24,12 +24,12 @@ class Corpus:
 
         self.tagger_path = "-d " + dic_path
 
-    def corpus(self, rows, mode):
+    def preprocess(self, records, mode):
         """Return X, y.
 
         Parameters
         ----------
-        rows : list
+        records : list
             A list of the article items.
 
         mode : string
@@ -46,25 +46,25 @@ class Corpus:
         if mode == "NaiveBayes":
             X = []
             y = []
-            for row in rows:
-                X.append(self.get_main_words(row["text"]))
-                y.append(row["category"])
+            for record in records:
+                X.append(self.get_main_words(record["text"]))
+                y.append(record["category"])
 
             return X, y
 
         elif mode == "Logistic":
-            words = []
+            texts = []
             labels = []
             tokenizer = RegexpTokenizer(r"\w+")
             vectorizer = TfidfVectorizer(tokenizer=tokenizer.tokenize,
                                          stop_words=self.stopwords,
                                          max_df=0.2,
                                          min_df=2)
-            for row in rows:
-                words.append(" ".join(self.get_main_words(row["text"])))
-                labels.append(row["category"])
+            for record in records:
+                texts.append(" ".join(self.get_main_words(record["text"])))
+                labels.append(record["category"])
 
-            X = vectorizer.fit_transform(words)
+            X = vectorizer.fit_transform(texts)
             y = labels
 
             with open("vocab.pickle", "wb") as f:
@@ -80,8 +80,8 @@ class Corpus:
         slothlib_path = ("http://svn.sourceforge.jp/svnroot/slothlib/CSharp/"
                          "Version1/SlothLib/NLP/Filter/StopWord/word/"
                          "Japanese.txt")
-        res = urlopen(slothlib_path)
-        stopwords = {line.decode("utf-8").strip() for line in res} - {""}
+        response = urlopen(slothlib_path)
+        stopwords = {line.decode("utf-8").strip() for line in response} - {""}
         return stopwords
 
     def get_main_words(self, text):

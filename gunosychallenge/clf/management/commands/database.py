@@ -3,7 +3,7 @@ import os
 import pymysql
 
 
-class Connect:
+class Database:
     """Class that manages the interaction with the database."""
     def __init__(self):
         """Set cursor and connection."""
@@ -14,19 +14,6 @@ class Connect:
                                     charset="utf8")
 
         self.cursor = self.conn.cursor(pymysql.cursors.DictCursor)
-
-    def get_data(self):
-        """Fetch all rows from database."""
-        self.cursor.execute("SELECT DISTINCT * FROM clf_article")
-        self.conn.commit()
-        data = self.cursor.fetchall()
-        if data:
-            print("Successfully Downloaded")
-
-        else:
-            print("Data is nothing")
-
-        return data
 
     def delete_data(self):
         """Delete all rows from database."""

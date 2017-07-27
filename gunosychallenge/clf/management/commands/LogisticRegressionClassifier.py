@@ -7,7 +7,7 @@ from sklearn.metrics import classification_report
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-class Logistic:
+class LogisticRegressionClassifier:
     """
     Logistic Regression classifier for multiclass.
     """
@@ -80,7 +80,7 @@ class Logistic:
         category = self.clf.predict(X)[0]
         return category
 
-    def validate(self, X, y):
+    def cross_validate(self, X, y):
         """Perform 5-fold Cross-vaidation.
 
         Parameters

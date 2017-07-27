@@ -8,4 +8,4 @@ class Article(models.Model):
 
     def __str__(self):
         """Return the article title."""
-        return self.title
+        return self.text
