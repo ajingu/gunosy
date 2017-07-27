@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/ajingu/gunosy.svg?token=j2e95gHftdeRHzvFPiYx&branch=master)](https://travis-ci.com/ajingu/gunosy)
 
-株式会社Gunosy様、インターン課題用のレポジトリでございます。
+株式会社Gunosy様、インターン課題用のレポジトリです。
 
 ## 概要説明
 Article Classifierは、フォームに入力された記事URLからHTMLを取得し、記事のカテゴリを判定し、画面に出力するアプリケーションである。
@@ -65,43 +65,64 @@ Analyzeボタンを押すと、記事のカテゴリを反映し、画面に出�
 
 ## 環境構築
 実行環境は以下の通りです。  
-Mac OS X: Sierra 10.12.2  
+Mac OS X: Sierra 10.12.2  
 Python: 3.6.1  
-  
+  
 ターミナルにて、  
-`$ brew update`  
-`$ brew install python3`  
-`$ virtualenv env -p python3`  
-`$ source env/bin/activate`  
-`$ brew install mysql`  
-`$ brew install mecab`  
-`$ brew install mecab-ipadic`  
-`$ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git`  
-`$ ./mecab-ipadic-neologd/bin/install-mecab-ipadic-neologd -y -n`    
+```
+$ brew update  
+$ brew install python3  
+$ pip install virtualenv  
+$ virtualenv --python=/usr/local/bin/python3 --no-site-packages env  
+$ source env/bin/activate   
+```
+と入力して、仮想環境を起動する。  
   
-と入力して、必要なパッケージをインストールする。  
-次に  
-`$ pip install -r requirements.txt`  
+次に、
+```
+$ brew install mecab  
+$ brew install mecab-ipadic  
+$ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git  
+$ ./mecab-ipadic-neologd/bin/install-mecab-ipadic-neologd -y -n  
+```
+と入力して、MeCabの辞書として使用するmecab-ipadic-neologdをインストールする。  
   
-と入力し、pythonの必要なライブラリをインストールする。  
+更に  
+```
+$ git clone git@github.com:ajingu/gunosy.git
+$ cd gunosy
+$ pip install -r requirements.txt  
+```
+  
+と入力し、必要なpythonパッケージを仮想環境にインストールする。  
+  
+最後に、.bash_profileに環境変数を描き込む必要がある。  
+今回は、データベースのパスワードを隠蔽するために、.bash_profileに環境変数を追加し、osモジュールを使ってプログラム中で環境変数を読み込んでいる。  
+```
+$ cd ~  
+$ vim .bash_profile  
+```
+で.bash_profileを開き、テキスト内に  
+```
+export GUNOSY_HOST="****"  
+export GUNOSY_USERNAME="****"  
+export GUNOSY_PASSWORD="****"  
+export GUNOSY_DATABASE_NAME="****"  
+```
+と入力し、環境変数を追加する。  
+それぞれの変数の対応は以下の通りである。各々が使うデータベースを考慮して、ふさわしい値を設定すれば良い。  
 
+|環境変数|値|
+|:-------|:--------|
+|GUNOSY_HOST|ホスト名|
+|GUNOSY_USERNAME|ユーザー名|
+|GUNOSY_PASSWORD|パスワード|
+|GUNOSY_DATABASE_NAME|データベース名|
 
 ## 動作させるための方法
-### 最初に
-データベースのパスワードを隠蔽するために、**.bash_profile**に環境変数を追加し、osモジュールを使ってプログラム中で環境変数を読み込んでいる。  
-そのため、動作させるためには.bash_profileに環境変数を描き込む必要がある。ターミナルのホームディレクトリにて  
-`$ vim .bash_profile`  
-と入力すると、.bash_profileが開かれるので、  
-`export GUNOSY_HOST="****"`  
-`export GUNOSY_USERNAME="****"`  
-`export GUNOSY_PASSWORD="****"`  
-`export GUNOSY_DATABASE_NAME="****"`  
-  
-と入力して環境変数を設定する。これによって、ローカルでウェブアプリを起動させる時にこれらの環境変数が読み込まれるため、プログラムが正常に動く。
-
-
-
 ### Step1: ナイーブベイズ分類器を使ったウェブアプリの作成
+※当レポジトリにはデフォルトで学習済みデータが入っているので、最初から`$ python manage.py runserver`と入力しても動く。  
+  
 データ収集の際に、以前に収集したデータを消したい場合、**gunosychallengeレポジトリ**にて  
 `$ python manage.py initialize`  
 というコマンドを打つことで、該当テーブルの全ての行を消去し、データベースを初期化することができる。  
@@ -114,7 +135,7 @@ scrapyを用いたデータを収集を行う際、**gunosychallengeレポジト
 `$ python manage.py make_clf nb`  
 というコマンドを打って行う。学習には約5分かかる。  
 
-ウェブアプリを立起動する際には、**gunosychallengeレポジトリ**にて  
+ウェブアプリを起動する際には、**gunosychallengeレポジトリ**にて  
 `$ python manage.py runserver`  
 というコマンドを打つ。  
 ローカルサーバーで立ち上げるため、http://127.0.0.1:8000/ にアクセスすると、該当するウェブアプリが起動している。    
@@ -126,7 +147,20 @@ scrapyを用いたデータを収集を行う際、**gunosychallengeレポジト
 `$ python manage.py make_clf logistic`  
 というコマンドを打って行う。学習には約10分かかる。  
 
-ウェブアプリの立ち上げと記事URLの入力・カテゴリの推測は、Step1と全く同じ方法で行う。
+ウェブアプリの立ち上げと記事URLの入力・カテゴリの推測は、Step1と全く同じ方法で行う。  
+
+### appendix: テスト  
+アプリケーションのテストを行うことが可能である。  
+  
+#### Scrapyのテスト
+**gunosyレポジトリ**にて  
+`$ python gunosynews/scrapy_test.py`  
+と入力すると、クローラーのテストを行うことができる。  
+  
+#### ウェブアプリのテスト
+**gunosychallengeレポジトリ**にて  
+`python manage.py test`  
+と入力すると、ウェブアプリのテストを行うことができる。  
 
 ## 工夫
 ### データ収集に関して
