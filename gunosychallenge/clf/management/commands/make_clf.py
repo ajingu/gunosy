@@ -1,8 +1,7 @@
+import numpy as np
 from django.core.management.base import BaseCommand
 from sklearn.model_selection import train_test_split
 from .preprocess import Preprocess
-from .NaiveBayesClassifier import NaiveBayesClassifier
-from .LogisticRegressionClassifier import LogisticRegressionClassifier
 from clf.models import Article
 
 
@@ -33,7 +32,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """
-        Handle a event in response to the argument 'make_clf @method'.
+        Make a classifier which type is
+        either NaiveBayes or LogisticRegression.
         """
         if options["method"] == ["nb"]:
             self.stdout.write(self.style.SUCCESS("NaiveBayes"))
@@ -45,11 +45,17 @@ class Command(BaseCommand):
                                                                 test_size=0.2,
                                                                 stratify=y,
                                                                 random_state=4)
+
+            from .NaiveBayes import NaiveBayesClassifier
             clf = NaiveBayesClassifier()
             clf = clf.fit(X_train, y_train)
             clf.save()
 
-            print(clf.report(X_test, y_test))
+            # scores = clf.cross_validate(X, y)
+            # print("scores:", scores)
+            # print("average value:", np.mean(scores))
+
+            # print(clf.report(X_test, y_test))
 
             self.stdout.write(self.style.SUCCESS("Succesfully made classfier"))
 
@@ -63,11 +69,17 @@ class Command(BaseCommand):
                                                                 test_size=0.2,
                                                                 stratify=y,
                                                                 random_state=4)
+
+            from .Logistic import LogisticRegressionClassifier
             clf = LogisticRegressionClassifier()
             clf = clf.fit(X_train, y_train)
             clf.save()
 
-            print(clf.report(X_test, y_test))
+            # scores = clf.cross_validate(X, y)
+            # print("scores:", scores)
+            # print("average value:", np.mean(scores))
+
+            # print(clf.report(X_test, y_test))
 
             self.stdout.write(self.style.SUCCESS("Succesfully made classfier"))
 

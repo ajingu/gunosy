@@ -12,7 +12,7 @@ class GunosynewsPipeline(object):
     """Pipeline that interacts with the database."""
     def __init__(self):
         """Set cursor and connection."""
-        self.conn = pymysql.connect(os.environ["GUNOSY_DATABASE_NAME"],
+        self.conn = pymysql.connect(os.environ["GUNOSY_HOST"],
                                     os.environ["GUNOSY_USERNAME"],
                                     os.environ["GUNOSY_PASSWORD"],
                                     os.environ["GUNOSY_DATABASE_NAME"],
@@ -20,11 +20,14 @@ class GunosynewsPipeline(object):
 
         self.cursor = self.conn.cursor()
 
+        table = os.environ["GUNOSY_TABLE_NAME"]
+        self.cmd = "INSERT INTO " + table + " (text, category) VALUES (%s, %s)"
+
     def process_item(self, item, spider):
         """Upload the scraped item."""
         try:
             self.cursor.execute(
-                "INSERT INTO clf_article (text, category) VALUES (%s, %s)",
+                self.cmd,
                 (item["text"], item["category"])
             )
 
