@@ -24,8 +24,13 @@ class GunosySpider(scrapy.Spider):
     def parse(self, response):
         """Parse a content list page.
 
-        @url https://gunosy.com/tags/2
-        @returns requests 0
+        Example Url
+        -----------
+        https://gunosy.com/tags/2
+
+        Returns
+        -------
+        HTTPRequests(detail page, next page)
         """
         detail_links = response.xpath(
             "//div[@class='list_content']//div[@class='list_title']//@href"
@@ -54,9 +59,17 @@ class GunosySpider(scrapy.Spider):
     def parse_detail(self, response):
         """Parse an article page.
 
-        @url https://gunosy.com/articles/RwrNu
-        @returns items 0 1
-        @scrapes category text
+        Example Url
+        -----------
+        https://gunosy.com/articles/RwrNu
+
+        Returns
+        -------
+        GunosynewsItems
+
+        Item Field
+        -------
+        category text
         """
         category = response.xpath(
             "//li[contains(@class, 'current')]/a/text()"

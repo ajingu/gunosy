@@ -7,16 +7,16 @@ from .management.commands.preprocess import Preprocess
 
 def form(request):
     """
-    Submit an article url and Return a predicted category or an error message.
+    Submit an article url, and Return a predicted category or an error message.
 
-    **Context**
-
+    Returned Context
+    -------
     ``result``
         A predicted category or an error message.
 
-    **Template**
-
-    :template:`clf/analysis.html`
+    Returned Template
+    --------
+    `clf/analysis.html`
     """
     if request.method == 'POST':
         form = ArticleForm(request.POST)

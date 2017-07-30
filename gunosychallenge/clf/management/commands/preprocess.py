@@ -10,7 +10,7 @@ from nltk.tokenize import RegexpTokenizer
 class Preprocess:
     """Class that preprocesses data."""
     def __init__(self):
-        """Setup pos, stopwords and the path for the tagger."""
+        """Setup pos-tag, stopwords and the path for the dictionary."""
         self.pos = {"名詞", "形容詞"}
         self.stopwords = self._get_stopwords()
         cmd = ["mecab-config --dicdir", "'/mecab-ipadic-neologd'"]
@@ -20,9 +20,7 @@ class Preprocess:
 
         dir_path = process.stdout.decode("utf-8").strip()
 
-        dic_path = dir_path + "/mecab-ipadic-neologd"
-
-        self.tagger_path = "-d " + dic_path
+        self.dic_path = "-d " + dir_path + "/mecab-ipadic-neologd"
 
     def preprocess(self, records, mode):
         """Return X, y.
@@ -38,7 +36,12 @@ class Preprocess:
         Returns
         -------
         X : list
-            Returns a list of characteristic words of each text.
+            Returns a list of characteristic words of each text
+            if mode is NaiveBayes.
+
+            Returns a list of sparse matrix
+            if mode is Logistic.
+
 
         y : list
             Returns a list of labels.
@@ -98,7 +101,7 @@ class Preprocess:
             Returns a list of characteristic words of each text.
         """
         main_words = []
-        tagger = MeCab.Tagger(self.tagger_path)
+        tagger = MeCab.Tagger(self.dic_path)
         tagger.parse("")
         node = tagger.parseToNode(text)
 

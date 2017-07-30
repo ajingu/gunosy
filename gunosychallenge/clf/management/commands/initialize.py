@@ -8,7 +8,7 @@ class Command(BaseCommand):
 
     Use this class if you want to delete all data and initialize the database.
 
-    Several attributes affect behaviour.
+    Several arguments affect behaviour.
 
     ``help``
         A short description of the command, which will be printed in

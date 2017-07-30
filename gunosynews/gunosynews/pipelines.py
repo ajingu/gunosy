@@ -39,6 +39,6 @@ class GunosynewsPipeline(object):
         return item
 
     def close_spider(self, spider):
-        """Close cursor and connection."""
+        """Close cursor and connection when the spider is closed."""
         self.cursor.close()
         self.conn.close()

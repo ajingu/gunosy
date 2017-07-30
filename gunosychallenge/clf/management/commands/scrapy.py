@@ -9,7 +9,7 @@ class Command(BaseCommand):
 
     Use this class if you want to crawl and scrape the article data.
 
-    Several attributes affect behaviour.
+    Several arguments affect behaviour.
 
     ``help``
         A short description of the command, which will be printed in
@@ -27,7 +27,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """
-        Handle a event in response to the argument 'scrapy crawl @botname'.
+        Run the bot which name is '@botname'.
         """
         os.chdir(os.path.abspath("../gunosynews"))
         from scrapy.cmdline import execute

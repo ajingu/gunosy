@@ -4,7 +4,7 @@ from django.test import TestCase
 class ArticleClassifierTests(TestCase):
     """Unittest for the app 'clf'."""
     def setUp(self):
-        """Setup the categories."""
+        """Setup the categories used in tests."""
         self.categories = {'エンタメ',
                            'スポーツ',
                            'おもしろ',
