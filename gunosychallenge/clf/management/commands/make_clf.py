@@ -12,7 +12,7 @@ class Command(BaseCommand):
     Use this class if you want to make a classifier which type is
     either 'NaiveBayes' or 'LogisticRegression'.
 
-    Several attributes affect behaviour.
+    Several arguments affect behaviour.
 
     ``help``
         A short description of the command, which will be printed in

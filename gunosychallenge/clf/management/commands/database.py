@@ -4,7 +4,7 @@ import pymysql
 
 
 class Database:
-    """Class that manages the interaction with the database."""
+    """Manage the interaction with the database."""
 
     def __init__(self):
         """Set cursor and connection."""

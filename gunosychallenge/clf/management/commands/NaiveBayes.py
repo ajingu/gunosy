@@ -14,11 +14,22 @@ class NaiveBayesClassifier:
 
     def __init__(self, l=None):
         """Initialize the classifier."""
+        # categories of articles
         self.categories = None
+
+        # denomiators used in calculating the conditional probability
         self.denominator = None
+
+        # counts of samples
         self.n_samples = None
+
+        # counts of each category
         self.catcount = None
+
+        # counts of words in each category
         self.wordcount = defaultdict(lambda: Counter())
+
+        # the meaningless parameter to work cross-validation method
         self.l = l
 
     def fit(self, X_train, y_train):
@@ -26,9 +37,9 @@ class NaiveBayesClassifier:
 
         Parameters
         ----------
-        X_train : list, shape [n_samples, n_features]
-            Training vectors, where n_samples is the number of samples
-            and n_features is the number of features.
+        X_train : list
+            Training vectors, the list of the list including
+            characteristic words in each text.
 
         y_train : list, shape [n_samples]
             Training Labels, where n_samples is the number of labels.
@@ -56,7 +67,7 @@ class NaiveBayesClassifier:
 
     def predict(self, X):
         """
-        Return the array of predicted categories, if X is test data.
+        Return the list of predicted categories, if X is test data.
 
         Return a predicted category,
         if X is a word list of the submitted article from the form.
@@ -107,9 +118,9 @@ class NaiveBayesClassifier:
 
         Parameters
         ----------
-        X_test : list, shape [n_samples, n_features]
-            Test vectors, where n_samples is the number of samples
-            and n_features is the number of features.
+        X_test : list
+            Test vectors, the list of the list including
+            characteristic words in each text.
 
         y_test : list, shape [n_samples]
             Test labels, where n_samples is the number of labels.
@@ -130,9 +141,10 @@ class NaiveBayesClassifier:
 
         Parameters
         ----------
-        X : list, shape [n_samples, n_features]
-            Vectors, where n_samples is the number of samples
-            and n_features is the number of features.
+        X : list
+            Vectors, the list of the list including
+            characteristic words in each text.
+
 
         y : list, shape [n_samples]
             Labels, where n_samples is the number of labels.
@@ -148,7 +160,7 @@ class NaiveBayesClassifier:
         return scores
 
     def get_params(self, deep=False):
-        """The method required for cross-validation."""
+        """The meaningless method to work cross-validation method."""
         return {'l': self.l}
 
     def report(self, X_test, y_test):
@@ -156,9 +168,9 @@ class NaiveBayesClassifier:
 
         Parameters
         ----------
-        X_test : list, shape [n_samples, n_features]
-            Test vectors, where n_samples is the number of samples
-            and n_features is the number of features.
+        X_test : list
+            Test vectors, the list of the list including
+            characteristic words in each text.
 
         y_test : list, shape [n_samples]
             Test labels, where n_samples is the number of labels.
