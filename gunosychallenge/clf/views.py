@@ -1,7 +1,7 @@
 import dill
 from django.shortcuts import render
 from .forms import ArticleForm
-from .httpRequest import get_text
+from .http_request import get_text
 from .management.commands.preprocess import Preprocess
 
 

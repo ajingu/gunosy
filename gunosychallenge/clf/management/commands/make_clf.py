@@ -1,4 +1,4 @@
-import numpy as np
+# import numpy as np
 from django.core.management.base import BaseCommand
 from sklearn.model_selection import train_test_split
 from .preprocess import Preprocess
@@ -46,7 +46,7 @@ class Command(BaseCommand):
                                                                 stratify=y,
                                                                 random_state=4)
 
-            from .NaiveBayes import NaiveBayesClassifier
+            from .naivebayes import NaiveBayesClassifier
             clf = NaiveBayesClassifier()
             clf = clf.fit(X_train, y_train)
             clf.save()
@@ -70,7 +70,7 @@ class Command(BaseCommand):
                                                                 stratify=y,
                                                                 random_state=4)
 
-            from .Logistic import LogisticRegressionClassifier
+            from .logistic import LogisticRegressionClassifier
             clf = LogisticRegressionClassifier()
             clf = clf.fit(X_train, y_train)
             clf.save()

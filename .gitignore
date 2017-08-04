@@ -2,5 +2,3 @@ myvenv
 __pycache__
 staticfiles
 *.py[co]
-gunosychallenge/clf/management/commands/svm.py
-gunosychallenge/clf/management/commands/resample.py

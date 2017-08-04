@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import dill
 import scipy.sparse as sp
 from sklearn.model_selection import cross_val_score, KFold, GridSearchCV

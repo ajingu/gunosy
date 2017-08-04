@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import scrapy
 from gunosynews.items import GunosynewsItem
 
