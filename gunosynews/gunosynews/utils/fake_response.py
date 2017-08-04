@@ -8,7 +8,7 @@ def fake_response(file_name, url=None):
     Parameters
     ----------
     file_name : string
-        The relative or absolute filename from the 'tests' directory.
+        The relative or absolute filename from the 'utils' directory.
 
     url : string
         The URL of the response.
@@ -25,8 +25,8 @@ def fake_response(file_name, url=None):
 
     if file_name:
         if not file_name[0] == '/':
-            tests_dir = os.path.dirname(os.path.abspath(__file__))
-            file_path = os.path.join(tests_dir, file_name)
+            utils_dir = os.path.dirname(os.path.abspath(__file__))
+            file_path = os.path.join(utils_dir, file_name)
         else:
             file_path = file_name
 
