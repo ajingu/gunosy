@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from .database import Database
+from clf.utils.database import Database
 
 
 class Command(BaseCommand):
