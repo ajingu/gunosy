@@ -1,10 +1,13 @@
 import dill
+
 import scipy.sparse as sp
-from .consts import Pickles, Params
-from sklearn.model_selection import cross_val_score, KFold, GridSearchCV
+
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import GridSearchCV, KFold, cross_val_score
+
+from .consts import Params, Resources
 
 
 class LogisticRegressionClassifier:
@@ -121,16 +124,16 @@ class LogisticRegressionClassifier:
 
     def save(self):
         """Serialize this classifier by pickling."""
-        with open(Pickles.CLF.value, "wb") as f:
+        with open(Resources.CLF.value, "wb") as f:
             dill.dump(self, f)
 
 
 class MyVectorizer(TfidfVectorizer):
     """Reuse the learned TfidfVectorizer for predicting a new content."""
-    with open(Pickles.IDF.value, "rb") as f:
+    with open(Resources.IDF.value, "rb") as f:
         idfs = dill.load(f)
 
-    with open(Pickles.VOCAB.value, "rb") as f:
+    with open(Resources.VOCAB.value, "rb") as f:
         vocabulary = dill.load(f)
 
     TfidfVectorizer.idf_ = idfs

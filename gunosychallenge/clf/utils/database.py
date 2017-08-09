@@ -1,4 +1,5 @@
 import os
+
 import pymysql
 
 
@@ -27,6 +28,6 @@ class Database:
 
     def close(self):
         """Close cursor and connection."""
-        self.conn.close()
         self.cursor.close()
+        self.conn.close()
         print("Successfully Closed")

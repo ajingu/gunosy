@@ -1,8 +1,10 @@
 # import numpy as np
-from django.core.management.base import BaseCommand
-from sklearn.model_selection import train_test_split
-from clf.utils.preprocess import Preprocess
 from clf.models import Article
+from clf.utils.preprocess import Preprocess
+
+from django.core.management.base import BaseCommand
+
+from sklearn.model_selection import train_test_split
 
 
 class Command(BaseCommand):

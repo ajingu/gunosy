@@ -1,19 +1,22 @@
 import os
 import sys
-import scrapy
 import unittest
 from unittest.case import TestCase
+
+import scrapy
+
 # add 'gunosy/gunosynews' directory to sys.path
 dir_path = os.path.dirname
 sys.path.append(os.path.abspath(dir_path(dir_path(dir_path(__file__)))))
 
-from gunosynews.items import GunosynewsItem # noqa
-from gunosynews.spiders.gunosy import GunosySpider # noqa
-from gunosynews.utils.fake_response import fake_response # noqa
+from gunosynews.items import GunosynewsItem  # noqa
+from gunosynews.spiders.gunosy import GunosySpider  # noqa
+from gunosynews.utils.fake_response import fake_response  # noqa
 
 
 class MyTestCase(TestCase):
     """Unittest for the scrapy bot 'gunosy'"""
+
     def setUp(self):
         """Setup the spider."""
         self.spider = GunosySpider()

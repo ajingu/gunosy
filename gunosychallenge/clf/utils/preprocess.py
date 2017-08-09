@@ -1,10 +1,15 @@
-import MeCab
-import dill
 import subprocess
-from .consts import Pickles, Mode, Morph
 from urllib.request import urlopen
-from sklearn.feature_extraction.text import TfidfVectorizer
+
+import MeCab
+
+import dill
+
 from nltk.tokenize import RegexpTokenizer
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+from .consts import Mode, Morph, Resources
 
 
 class Preprocess:
@@ -70,10 +75,10 @@ class Preprocess:
             X = vectorizer.fit_transform(texts)
             y = labels
 
-            with open(Pickles.VOCAB.value, "wb") as f:
+            with open(Resources.VOCAB.value, "wb") as f:
                 dill.dump(vectorizer.vocabulary_, f)
 
-            with open(Pickles.IDF.value, "wb") as f:
+            with open(Resources.IDF.value, "wb") as f:
                 dill.dump(vectorizer.idf_, f)
 
             return X, y

@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Pickles(Enum):
+class Resources(Enum):
     IDF = "resource/idfs.pickle"
     VOCAB = "resource/vocab.pickle"
     CLF = "resource/m_clf.pickle"

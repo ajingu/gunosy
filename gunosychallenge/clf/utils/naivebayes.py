@@ -1,10 +1,14 @@
 import math
+from collections import Counter, defaultdict
+
 import dill
+
 import numpy as np
-from .consts import Pickles, Params
-from collections import defaultdict, Counter
-from sklearn.model_selection import cross_val_score, KFold
+
 from sklearn.metrics import classification_report
+from sklearn.model_selection import KFold, cross_val_score
+
+from .consts import Params, Resources
 
 
 class NaiveBayesClassifier:
@@ -186,5 +190,5 @@ class NaiveBayesClassifier:
 
     def save(self):
         """Serialize this classifier by pickling."""
-        with open(Pickles.CLF.value, "wb") as f:
+        with open(Resources.CLF.value, "wb") as f:
             dill.dump(self, f)
