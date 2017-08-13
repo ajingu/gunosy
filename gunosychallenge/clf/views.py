@@ -1,8 +1,12 @@
+from clf.utils.consts import Resources
+from clf.utils.preprocess import Preprocess
+
 import dill
+
 from django.shortcuts import render
+
 from .forms import ArticleForm
 from .http_request import get_text
-from .management.commands.preprocess import Preprocess
 
 
 def form(request):
@@ -26,7 +30,7 @@ def form(request):
                 text = get_text(url)
                 words = Preprocess().get_main_words(text)
 
-                with open("m_clf.pickle", "rb") as f:
+                with open(Resources.CLF.value, "rb") as f:
                     clf = dill.load(f)
 
                 category = clf.predict(words)

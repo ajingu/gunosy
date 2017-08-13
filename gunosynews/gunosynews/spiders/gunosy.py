@@ -1,5 +1,6 @@
-import scrapy
 from gunosynews.items import GunosynewsItem
+
+import scrapy
 
 
 class GunosySpider(scrapy.Spider):

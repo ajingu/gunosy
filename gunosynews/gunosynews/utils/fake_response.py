@@ -1,5 +1,6 @@
 import os
-from scrapy.http import TextResponse, Request
+
+from scrapy.http import Request, TextResponse
 
 
 def fake_response(file_name, url=None):

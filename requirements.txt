@@ -10,3 +10,4 @@ scipy==0.19.1
 nltk==3.2.4
 dill==0.2.7
 flake8==3.3.0
+flake8-import-order==0.13
