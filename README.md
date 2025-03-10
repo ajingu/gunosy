@@ -1,6 +1,7 @@
 # Article Classifier
 
-[![Build Status](https://travis-ci.com/ajingu/gunosy.svg?token=j2e95gHftdeRHzvFPiYx&branch=master)](https://travis-ci.com/ajingu/gunosy)
+
+![Image](https://github.com/user-attachments/assets/a89a8bb9-3ab7-4875-be03-a8007098b9be)
 
 株式会社Gunosy様、インターン課題用のレポジトリです。
 
